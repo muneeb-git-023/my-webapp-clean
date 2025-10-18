@@ -16,4 +16,4 @@ spec:
         - name: my-webapp
           image: muneebdock12/my-webapp:latest
           ports:
-            - containerPort: 3000
+            - containerPort: 3002

@@ -47,4 +47,4 @@ jobs:
             docker pull ${{ secrets.DOCKER_USERNAME }}/my-webapp:latest
             docker stop my-webapp || true
             docker rm my-webapp || true
-            docker run -d -p 80:3000 --name my-webapp ${{ secrets.DOCKER_USERNAME }}/my-webapp:latest
+            docker run -d -p 80:3002 --name my-webapp ${{ secrets.DOCKER_USERNAME }}/my-webapp:latest
