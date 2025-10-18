@@ -10,11 +10,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout repo
+      # Checkout the repository
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Set up Docker
+      #  List files for debugging (optional)
+      - name: List repo files
+        run: ls -R
+
+      # Set up Docker Buildx
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -33,14 +37,26 @@ jobs:
           push: true
           tags: muneebdock12/my-webapp:latest
 
-      # Deploy to Kubernetes
-      - name: Set up Kubeconfig
+      # Set up kubectl
+      - name: Set up kubectl
         uses: azure/setup-kubectl@v3
         with:
           version: 'v1.30.0'
           kubeconfig: ${{ secrets.KUBECONFIG }}
 
-      - name: kubernetes
+      # Apply Kubernetes manifests
+      - name: Deploy to Kubernetes
         run: |
-          kubectl apply -f deployment.yaml
-          kubectl apply -f service.yaml
+          # Ensure files exist
+          if [ ! -f "kubernetes/deployment.yaml" ]; then
+            echo "Error: deployment.yaml not found!"
+            exit 1
+          fi
+          if [ ! -f "kubernetes/service.yaml" ]; then
+            echo "Error: service.yaml not found!"
+            exit 1
+          fi
+
+          # Apply manifests
+          kubectl apply -f kubernetes/deployment.yaml
+          kubectl apply -f kubernetes/service.yaml
